@@ -23,6 +23,8 @@ app.get("/login", (req, res) => {
 app.get("/logout", (req, res) => {
     res.send(`<script>
     localStorage.removeItem('nktoken')
+    localStorage.removeItem('nkmail')
+    
     location.href = ".."
     </script>
     `
@@ -109,6 +111,7 @@ io.on("connection", socket => {
         if (user) {
             socket.emit("codeResponse", { token: user.token, error: null })
             log(`User with mail ${data.mail} already exists, returning user's token.`, "info")
+            await temporaryMail.deleteOne({ mail: data.mail })
             return
         }
         //generate token
@@ -123,7 +126,7 @@ io.on("connection", socket => {
         await newUser.save()
         //delete temp mail
         await temporaryMail.deleteOne({ mail: data.mail })
-        socket.emit("codeResponse", { token: token, error: null })
+        socket.emit("codeResponse", { mail: data.mail, token: token, error: null })
         log(`User with mail ${data.mail} created.`, "info")
     })
     socket.on("disconnect", () => {

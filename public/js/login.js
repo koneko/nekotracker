@@ -31,5 +31,6 @@ socket.on("codeResponse", (object) => {
     console.log("Code response recieved.")
     if (object.error != null) return
     localStorage.setItem("nktoken", object.token)
+    localStorage.setItem("nkmail", object.mail)
     location.href = ".."
 })
