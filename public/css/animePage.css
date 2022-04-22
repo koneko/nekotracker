@@ -1,0 +1,14 @@
+.anime-info {
+	display: flex;
+	gap: 10px;
+    background-color: var(--contrast);
+    padding: 10px;
+    min-height: 100%;
+}
+.container {
+    max-width: calc(5 * 210px);
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: 20px;
+}

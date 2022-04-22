@@ -1,0 +1,40 @@
+:root {
+    --background: black;
+    --main: #32213a;
+    --main-selected: #383B53;
+    --highlight: #66717E;
+    --contrast: #D4D6B9;
+    --contrast-selected: #D1CAA1;
+    --text: white;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+
+body { 
+    background-color: var(--background);
+}
+
+
+input {
+	border: none;
+	padding: 5px;
+	font-size: 19px;
+}
+
+button {
+	border: none;
+	background-color: var(--contrast);
+	color: black;
+	padding: 5px;
+	cursor: pointer;
+	font-size: 19px;
+}
+
+.text-muted {
+    color: lightgray;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "nekotracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "express": "^4.17.3",
+    "gmail-send": "^1.8.14",
+    "jssha": "^3.2.0",
+    "mongoose": "^6.3.1",
+    "socket.io": "^4.4.1"
+  }
+}

@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Import default libs -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/loginPage.css">
+    <link rel="shortcut icon" href="https://hub.koneko.link/cdn/icons/purple.png" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/11fc85fa63.js" crossorigin="anonymous"></script>
+    <!-- end -->
+    <title>NekoList</title>
+</head>
+<body>
+    <div class="header">
+        <a href="#" class="logo">NekoList</a>
+        <div class="header-right" id="header-top-right">
+          <a href="#">Back</a>
+        </div>
+    </div> 
+    <div class="main">
+        <div class="container">
+                <h2>Login</h2>
+                <br><br>
+                <input id="loginMail" placeholder="john@example.com">
+                <br><br>
+                <button onclick="sendLoginRequest()">Login</button>
+        </div>
+        </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../js/login.js"></script>
+</html>

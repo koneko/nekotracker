@@ -1,0 +1,28 @@
+.anime-item-text {
+    color: white;
+    text-align: center;
+}
+.anime-front-page-item {
+    background-color: var(--main);
+    border-radius: 5px;
+    padding: 10px;
+    width: 210px;
+    margin: 0 auto;
+    text-align: center;
+    cursor:pointer;
+}
+.anime-container-grid {
+    display: grid;
+    gap: 1rem;
+    /* grid-template-columns: 210px 210px 210px 210px; */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%/1, max(210px, 100%/5)), 1fr));
+    /* width: calc(4 * 210px); */
+    max-width: calc(5 * 210px);
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.container {
+    text-align: center;
+    margin-top: 10px;
+}
