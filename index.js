@@ -202,6 +202,12 @@ io.on("connection", socket => {
             currentEpisode: 0
         }
         user.list.push(pushObject)
+        //sort the list from A-Z
+        user.list.sort((a, b) => {
+            if (a.name < b.name) return -1
+            if (a.name > b.name) return 1
+            return 0
+        })
         await user.save()
         socket.emit("addToListResponse", { error: null })
         log(`User with mail ${object.mail} added item with id ${id} to their list.`, "info")
@@ -261,6 +267,17 @@ io.on("connection", socket => {
         socket.emit("getUserInfoResponse", { info: info, error: null })
         log(`User with mail ${data.mail} requested their info.`, "info")
     })
+    socket.on("searchList", async (data) => {
+        // mail, token, query are being passed
+        // find the anime in the list without case sensitivity
+        log(`User with mail ${data.mail} is searching for ${data.query}.`, "info")
+        let user = await User.findOne({ mail: data.mail, token: data.token })
+        if (!user) return socket.emit("searchListResponse", { error: "Invalid token." })
+        //respond with list
+        let list = user.list.filter(item => item.name.toLowerCase().includes(data.query.toLowerCase()))
+        socket.emit("searchListResponse", { list: list, error: null })
+        log(`User with mail ${data.mail} searched for ${data.query}.`, "info")
+    })
     socket.on("importData", async (data) => {
         //mail, token, list
         log(`User with mail ${data.mail} is attempting to import data.`, "info")
@@ -310,6 +327,11 @@ io.on("connection", socket => {
             state: "watching"
         }
         user.list.push(pushObject)
+        user.list.sort((a, b) => {
+            if (a.name < b.name) return -1
+            if (a.name > b.name) return 1
+            return 0
+        })
         await user.save()
         socket.emit("apiAddResponse", { error: null })
         log(`User with mail ${data.mail} added an anime via api.`, "info")

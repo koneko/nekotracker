@@ -34,7 +34,7 @@ socket.on("checkIsLoggedInResponse", (error) => {
             let item = object.item
             body.innerHTML = `
             <input type="text" id="editAnimeName" placeholder="Anime name" value="${item.name}">
-            <br><br>
+            <br>
             <input type="text" id="editAnimeSrc" placeholder="Anime image link" value="${item.src}">
             <br><br>
             <select name="animeState" id="editAnimeState">

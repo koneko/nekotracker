@@ -86,6 +86,33 @@ function importData () {
     })
 }
 
+function searchAnime () {
+    var value = document.getElementById("search-query").value
+    socket.emit("searchList", { mail: localStorage.getItem("nkmail"), token: localStorage.getItem("nktoken"), query: value })
+    socket.on("searchListResponse", data => {
+        if (data.error != null) return alert(data.error)
+        let body = document.querySelector(".list-content")
+        body.innerHTML = ""
+        data.list.forEach(element => {
+            let div = document.createElement("div")
+            div.classList.add("anime-container")
+            div.innerHTML = `
+            <div class="anime-image-container" id="${element.name}-image">
+                <img src="${element.src}" alt="${element.name} image" referrerpolicy="no-referrer" style="width:131px;height:176px;">
+            </div>
+            <div class="anime-info-container">
+                <div class="anime-info-name">${element.name}</div>
+                <br>
+                <div class="anime-info-state">Anime state: <div class="badge">${element.state}</div></div><br>
+                <div class="anime-info-episode">Current episode: <div class="badge">${element.currentEpisode}</div></div><br>
+                <div class="anime-edit"><i class="fa-solid fa-pen-to-square" style="color:var(--contrast);cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="openAndSelect('${element.id}')"></i></div>
+            </div>
+            `
+            body.appendChild(div)
+        })
+    })
+}
+
 if (localStorage.getItem("nktoken")) {
     document.getElementById("header-top-right").innerHTML = `
     <a href="#" onclick="setModal('profile')" data-bs-toggle="modal" data-bs-target="#exampleModal" >Profile</a>
@@ -115,6 +142,8 @@ if (localStorage.getItem("nktoken")) {
         <div class="list-container">
         <i class="fa-solid fa-circle-plus" style="color:var(--contrast);font-size: 50px;cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setModal('add')"></i>
         <i class="fa-solid fa-pen-to-square" style="color:var(--contrast);font-size: 50px;cursor:pointer;margin-left:20px;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setModal('edit')"></i>
+        <input style="margin-left:20px;font-size:30px" id="search-query" placeholder="Anime name..." class="text-black">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--contrast);font-size:30px;cursor:pointer;margin-left:5px;" onclick="searchAnime()"></i>
         <hr style="background-color:white">
         <div class="list-content">
         </div>
