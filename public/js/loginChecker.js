@@ -44,9 +44,8 @@ socket.on("checkIsLoggedInResponse", (error) => {
                 <option value="dropped" ${item.state == "dropped" ? "selected" : ""}>Dropped</option>
                 <option value="undecided" ${item.state == "undecided" ? "selected" : ""}>Undecided</option>
             </select>
-            <br><br>
-            <input id="editAnimeEpisode" placeholder="Current Episode" value="${item.currentEpisode}">
-            <button onclick="editAnime()">Edit</button>
+            <input id="editAnimeEpisode" placeholder="Current Episode" value="${item.currentEpisode}" style="width:30px;">
+            <button onclick="editAnime()">Confirm</button>
             `
         })
     }

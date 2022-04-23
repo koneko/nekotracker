@@ -12,4 +12,25 @@
 <script>
     setPageState("edit");
     checkIsLoggedIn()
+    function editAnime() {
+        var name = document.getElementById("editAnimeName").value
+        var src = document.getElementById("editAnimeSrc").value
+        var state = document.getElementById("editAnimeState").value
+        var current = document.getElementById("editAnimeEpisode").value
+        socket.emit("submitEdit", {
+            id: id,
+            name: name,
+            src: src,
+            state: state,
+            currentEpisode: current,
+            mail: localStorage.getItem("nkmail"),
+            token: localStorage.getItem("nktoken")
+        })
+        socket.on("submitEditResponse", error => {
+            if(error.error != null) return alert(error.error)
+            parent.document.getElementById("modal-close-btn").click()
+            parent.location.reload()
+        })
+
+    }
 </script>

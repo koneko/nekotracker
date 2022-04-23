@@ -6,7 +6,6 @@ const app = express();
 const http = require("http");
 const fs = require("fs")
 const { Server } = require("socket.io");
-
 const port = process.env.PORT || 3000
 const dbUrl = process.env.DBURL || "mongodb://127.0.0.1/anime-tracker"
 const mail = require("./mail.json")
@@ -16,6 +15,7 @@ app.use(express.static("public"))
 const temporaryMail = require("./models/tempMail.js")
 const User = require("./models/User.js");
 const { fstat } = require("fs");
+const { use } = require("express/lib/application");
 
 
 app.get("/login", (req, res) => {
@@ -30,10 +30,6 @@ app.get("/logout", (req, res) => {
     </script>
     `
     )
-})
-
-app.get("/profile", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/profile.html"))
 })
 
 app.get("/list/add", (req, res) => {
@@ -143,6 +139,13 @@ io.on("connection", socket => {
         }
         //generate token
         let token = utils.generateToken()
+        //check if user with token already exists
+        user = await User.findOne({ token: token })
+        //if user exists, generate new token
+        while (user) {
+            token = utils.generateToken()
+            user = await User.findOne({ token: token })
+        }
         //create user
         let newUser = new User({
             mail: data.mail,
@@ -233,13 +236,124 @@ io.on("connection", socket => {
         let item = user.list.find(item => item.id == data.id)
         if (!item) return socket.emit("submitEditResponse", { error: "Item not found." })
         //edit item
-        item.name = data.name
-        item.state = data.state
-        item.src = data.src
-        item.currentEpisode = data.currentEpisode
+        var newItem = { ...item, name: data.name, state: data.state, src: data.src, currentEpisode: data.currentEpisode };
+        user.list.splice(user.list.indexOf(item), 1, newItem);
+        // item.name = data.name
+        // item.state = data.state
+        // item.src = data.src
+        // item.currentEpisode = data.currentEpisode
+        //user.list.push(newItem);
         await user.save()
         socket.emit("submitEditResponse", { error: null })
         log(`User with mail ${data.mail} submitted edit to item with id ${data.id}.`, "info")
+    })
+    socket.on("getUserInfo", async (data) => {
+        //mail and token
+        log(`User with mail ${data.mail} is requesting their info.`, "info")
+        let user = await User.findOne({ mail: data.mail, token: data.token })
+        if (!user) return socket.emit("getUserInfoResponse", { error: "Invalid token." })
+        //respond with info
+        let info = {
+            mail: user.mail,
+            displayName: user.displayName,
+            list: user.list
+        }
+        socket.emit("getUserInfoResponse", { info: info, error: null })
+        log(`User with mail ${data.mail} requested their info.`, "info")
+    })
+    socket.on("importData", async (data) => {
+        //mail, token, list
+        log(`User with mail ${data.mail} is attempting to import data.`, "info")
+        let user = await User.findOne({ mail: data.mail, token: data.token })
+        if (!user) return socket.emit("importDataResponse", { error: "Invalid token." })
+        if (user.mail != mail.owner) return socket.emit("importDataResponse", { error: "You are not koneko. This feature may potentially crash the server if used by anyone other than koneko." })
+        //check if list is valid
+        if (!data.list) return socket.emit("importDataResponse", { error: "Invalid list." })
+        //check if list is valid
+        let parsedList = JSON.parse(data.list)
+        if (!parsedList) return socket.emit("importDataResponse", { error: "Invalid list." })
+        //create and overwrite old list
+        let list = []
+        parsedList.forEach(element => {
+            console.log(element)
+            let id = utils.generateId()
+            if (element.currentEpisodeNumber == null) element.currentEpisodeNumber = 0
+            let pushObject = {
+                id: id,
+                name: element.title,
+                src: element.imgUrl,
+                currentEpisode: element.currentEpisodeNumber.toString(),
+                state: "watching"
+            }
+            list.push(pushObject)
+        });
+        user.list = list
+        await user.save()
+        socket.emit("importDataResponse", { error: null })
+        log(`User with mail ${data.mail} imported data.`, "info")
+    })
+    socket.on("apiAdd", async (data) => {
+        //token, name, src, currentEpisode
+        log(`User with mail ${data.mail} is attempting to add an anime via api.`, "info")
+        let user = await User.findOne({ token: data.token })
+        if (!user) return socket.emit("apiAddResponse", { error: "Invalid token." })
+        //check if item exists
+        let item = user.list.find(item => item.id == data.id)
+        if (item) return socket.emit("apiAddResponse", { error: "Item already exists." })
+        //add item
+        let id = utils.generateId()
+        let pushObject = {
+            id: id,
+            name: data.name,
+            src: data.src,
+            currentEpisode: data.currentEpisode,
+            state: "watching"
+        }
+        user.list.push(pushObject)
+        await user.save()
+        socket.emit("apiAddResponse", { error: null })
+        log(`User with mail ${data.mail} added an anime via api.`, "info")
+    })
+    socket.on("apiEdit", async data => {
+        //token,  name, src, currentEpisode
+        log(`User with mail ${data.mail} is attempting to edit an anime via api.`, "info")
+        let user = await User.findOne({ token: data.token })
+        if (!user) return socket.emit("apiEditResponse", { error: "Invalid token." })
+        //check if item exists via name
+        let item = user.list.find(item => item.name == data.name)
+        if (!item) return socket.emit("apiEditResponse", { error: "Item not found." })
+        var newItem = { ...item, name: data.name, state: data.state, src: data.src, currentEpisode: data.currentEpisode };
+        user.list.splice(user.list.indexOf(item), 1, newItem);
+        await user.save()
+        socket.emit("apiEditResponse", { error: null })
+        log(`User with mail ${data.mail} edited an anime via api.`, "info")
+    })
+    socket.on("apiDelete", async data => {
+        //token, name
+        log(`User with mail ${data.mail} is attempting to delete an anime via api.`, "info")
+        let user = await User.findOne({ token: data.token })
+        if (!user) return socket.emit("apiDeleteResponse", { error: "Invalid token." })
+        //check if item exists via name
+        let item = user.list.find(item => item.name == data.name)
+        if (!item) return socket.emit("apiDeleteResponse", { error: "Item not found." })
+        user.list.splice(user.list.indexOf(item), 1);
+        await user.save()
+        socket.emit("apiDeleteResponse", { error: null })
+        log(`User with mail ${data.mail} deleted an anime via api.`, "info")
+    })
+    socket.on("apiGet", async data => {
+        // token
+        log(`User with mail ${data.mail} is requesting their list via api.`, "info")
+        let user = await User.findOne({ token: data.token })
+        if (!user) return socket.emit("apiGetResponse", { error: "Invalid token." })
+        //respond with info
+        let info = {
+            mail: user.mail,
+            displayName: user.displayName,
+            list: user.list
+        }
+        socket.emit("apiGetResponse", { info: info, error: null })
+        log(`User with mail ${data.mail} requested their list via api.`, "info")
     })
     socket.on("disconnect", () => {
         log("User disconnected.", "info");

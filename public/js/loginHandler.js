@@ -17,7 +17,7 @@ function setModal (name) {
     } else if (name == "edit") {
         title.textContent = "Edit anime"
         body.innerHTML = `
-        <select id="selectAnimeEdit">
+        <select id="selectAnimeEdit" class="text-black">
         </select><br>
         <button onclick="selectOption()">Select</button>
         `
@@ -29,11 +29,27 @@ function setModal (name) {
                 let option = document.createElement("option")
                 option.textContent = element.name
                 option.value = element.id
+                option.className = "text-black"
                 select.appendChild(option)
             });
         })
     } else if (name == "profile") {
         title.textContent = "Profile"
+        socket.emit("getUserInfo", { mail: localStorage.getItem("nkmail"), token: localStorage.getItem("nktoken") })
+        socket.on("getUserInfoResponse", (object) => {
+            if (object.error != null) return alert(object.error)
+            console.log(object.info)
+            let user = object.info
+            body.style.color = "black"
+            body.style.textAlign = "center"
+            body.innerHTML = `
+            <h1 class="badge-lg"> ${user.displayName}</h1>
+            <h4 class="badge-lg">${user.mail}</h4><br>
+            <input class="badge-lg" placeholder="JSON data..." id="import-data">
+            <button class="btn btn-outline-info" onclick="importData()">Import</button><br><br>
+            <button class="btn btn-outline-danger">Delete</button>
+            `
+        })
     }
 }
 
@@ -47,6 +63,27 @@ function selectOption () {
     iframe.style.height = "100%"
     body.innerHTML = ""
     body.appendChild(iframe)
+}
+
+function openAndSelect (id) {
+    setModal("edit")
+    let body = document.getElementById("modal-body")
+    let iframe = document.createElement("iframe")
+    iframe.src = "/list/edit/" + id
+    iframe.style.width = "100%"
+    iframe.style.height = "100%"
+    body.innerHTML = ""
+    body.appendChild(iframe)
+}
+
+
+function importData () {
+    let data = document.getElementById("import-data").value
+    socket.emit("importData", { mail: localStorage.getItem("nkmail"), token: localStorage.getItem("nktoken"), list: data })
+    socket.on("importDataResponse", (object) => {
+        if (object.error != null) return alert(object.error)
+        alert("Data imported.")
+    })
 }
 
 if (localStorage.getItem("nktoken")) {
@@ -100,7 +137,7 @@ if (localStorage.getItem("nktoken")) {
                 <br>
                 <div class="anime-info-state">Anime state: <div class="badge">${element.state}</div></div><br>
                 <div class="anime-info-episode">Current episode: <div class="badge">${element.currentEpisode}</div></div><br>
-                <div class="anime-info-remove">Delete anime:  <a href="/list/remove/${element.id}"><i class="fa-solid fa-trash-can"></i></a></div>
+                <div class="anime-edit"><i class="fa-solid fa-pen-to-square" style="color:var(--contrast);cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="openAndSelect('${element.id}')"></i></div>
             </div>
             `
             container.appendChild(div)

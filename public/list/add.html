@@ -24,6 +24,10 @@
             mail: localStorage.getItem("nkmail"),
             token: localStorage.getItem("nktoken")
         })
-        parent.document.getElementById("modal-close-btn").click()
+        socket.on("addToListResponse", error => {
+            if(error.error != null) return
+            parent.document.getElementById("modal-close-btn").click()
+            parent.location.reload()
+        })
     }
 </script>

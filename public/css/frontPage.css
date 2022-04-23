@@ -7,11 +7,22 @@
     height: max-content;
     border-radius: 5px;
 }
+/* column with 3 rows, each equal, every element is the same height */
+.list-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+.list-content > div {
+    border-radius: 5px;
+    padding: 10px;
+}
 .anime-container {
     display:flex;
     background-color: var(--main-selected);
     padding: 10px;
-    height: max-content;
+    height: 300px;
     border-radius: 5px;
 }
 .anime-info-container {
@@ -25,4 +36,19 @@
     text-align: center;
     padding-top: 0px;
     border-radius: 5px;
+}
+.badge-lg {
+    color: black !important;
+}
+.fa-solid:hover {
+    color:var(--contrast-selected) !important;
+}
+/* if the screen shrinks to the phone, remove the grid from list-content */
+@media screen and (max-width: 600px) {
+    .list-content {
+        display: block;
+    }
+    .anime-container {
+        margin-top: 10px;
+    }
 }

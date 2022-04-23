@@ -5,7 +5,7 @@
     --main-badge: #27293a;
     --highlight: #66717E;
     --contrast: #D4D6B9;
-    --contrast-selected: #D1CAA1;
+    --contrast-selected: #f5ecbb;
     --text: white;
 }
 
@@ -38,4 +38,7 @@ button {
 
 .text-muted {
     color: lightgray;
+}
+.text-black {
+    color: black !important
 }
