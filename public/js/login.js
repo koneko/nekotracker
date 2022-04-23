@@ -1,4 +1,4 @@
-const socket = io.connect("http://localhost:3000")
+const socket = io();
 function sendLoginRequest () {
     let value = document.getElementById("loginMail").value
     value = value.replace(/\s/g, "");
@@ -13,10 +13,10 @@ socket.on("loginResponse", (object) => {
     console.log("Response recieved.")
     console.log(object)
     let returnmail = object.mail
-    if (!object.error) {
-        console.log("Awaiting code.")
-        document.querySelector(".container").innerHTML = ""
-        document.querySelector(".container").innerHTML = `
+    if (object.error) return alert(object.error)
+    console.log("Awaiting code.")
+    document.querySelector(".container").innerHTML = ""
+    document.querySelector(".container").innerHTML = `
         <h2>Enter code</h2>
         <br><br>
         <p>Please enter the code you recieved at your mail, <b>${returnmail}</b></p>
@@ -25,12 +25,11 @@ socket.on("loginResponse", (object) => {
         <br><br>
         <button onclick="sendCode('${returnmail}')">Send</button>
         `
-    }
 })
 socket.on("codeResponse", (object) => {
     console.log("Code response recieved.")
-    if (object.error != null) return
+    if (object.error) return alert(object.error)
     localStorage.setItem("nktoken", object.token)
     localStorage.setItem("nkmail", object.mail)
-    location.href = ".."
+    location.href = "/"
 })

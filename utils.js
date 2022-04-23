@@ -34,8 +34,19 @@ function generateToken (mail, code) {
     return hash
 }
 
+function generateId () {
+    // math.random a number between 333 and 500000, with random letters in between each number
+    var id = "";
+    var random = Math.floor(Math.random() * (500000 - 333)) + 333;
+    for (var i = 0; i < random.toString().length; i++) {
+        id += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+    }
+    return id + random.toString();
+}
+
 module.exports = {
     log: output,
     validate: validateEmail,
-    generateToken
+    generateToken,
+    generateId
 }

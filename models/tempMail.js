@@ -13,7 +13,7 @@ var temporaryMailSchema = new Schema({
     }
 }, {
     timestamps: true,
-    expires: 300
+    expireAfterSeconds: 300,
 });
 //create temporary mail model
 var temporaryMail = mongoose.model('temporaryMail', temporaryMailSchema);

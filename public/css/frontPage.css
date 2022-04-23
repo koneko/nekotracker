@@ -1,28 +1,28 @@
-.anime-item-text {
-    color: white;
-    text-align: center;
-}
-.anime-front-page-item {
+.list-container {
+    /* align items in the center, but a little to the left */
+    align-items: left !important;
+    margin-top: 20px;
     background-color: var(--main);
-    border-radius: 5px;
     padding: 10px;
-    width: 210px;
-    margin: 0 auto;
-    text-align: center;
-    cursor:pointer;
+    height: max-content;
+    border-radius: 5px;
 }
-.anime-container-grid {
-    display: grid;
-    gap: 1rem;
-    /* grid-template-columns: 210px 210px 210px 210px; */
-    grid-template-columns: repeat(auto-fit, minmax(min(100%/1, max(210px, 100%/5)), 1fr));
-    /* width: calc(4 * 210px); */
-    max-width: calc(5 * 210px);
-    margin: 0 auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
+.anime-container {
+    display:flex;
+    background-color: var(--main-selected);
+    padding: 10px;
+    height: max-content;
+    border-radius: 5px;
 }
-.container {
+.anime-info-container {
+    margin-left: 10px;
+}
+.anime-info-name, .badge {
+    font-size: 20px;
+    font-weight: bold;
+    background: var(--main-badge);
+    padding: 5px;
     text-align: center;
-    margin-top: 10px;
+    padding-top: 0px;
+    border-radius: 5px;
 }
