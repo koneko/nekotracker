@@ -8,9 +8,10 @@ const fs = require("fs")
 const { Server } = require("socket.io");
 const port = process.env.PORT || 3000
 const dbUrl = process.env.DBURL || "mongodb://127.0.0.1/anime-tracker"
-const mail = require("./mail.json")
+// const mail = require("./mail.json")
 const log = utils.log
-if (!mail) {
+let mail = null
+if (mail == null) {
     let mail = { fake: "fake" }
     mail.username = process.env.username
     mail.password = process.env.password
