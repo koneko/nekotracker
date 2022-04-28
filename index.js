@@ -13,7 +13,7 @@ const log = utils.log
 let mail = null
 if (mail == null) {
     let mail = { fake: "fake" }
-    mail.username = process.env.username
+    mail.username = "no.reply.koneko"
     mail.password = process.env.password
     mail.owner = process.env.owner
 }
