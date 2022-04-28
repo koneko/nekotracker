@@ -14,9 +14,6 @@ app.use(express.static("public"))
 
 const temporaryMail = require("./models/tempMail.js")
 const User = require("./models/User.js");
-const { fstat } = require("fs");
-const { use } = require("express/lib/application");
-
 
 app.get("/login", (req, res) => {
     res.sendFile(path.join(__dirname, "./public/login.html"))

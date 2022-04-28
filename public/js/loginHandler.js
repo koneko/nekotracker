@@ -140,10 +140,10 @@ if (localStorage.getItem("nktoken")) {
     let container = document.querySelector(".container")
     container.innerHTML = `
         <div class="list-container">
-        <i class="fa-solid fa-circle-plus" style="color:var(--contrast);font-size: 50px;cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setModal('add')"></i>
-        <i class="fa-solid fa-pen-to-square" style="color:var(--contrast);font-size: 50px;cursor:pointer;margin-left:20px;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setModal('edit')"></i>
-        <input style="margin-left:20px;font-size:30px" id="search-query" placeholder="Anime name..." class="text-black">
-        <i class="fa-solid fa-magnifying-glass" style="color:var(--contrast);font-size:30px;cursor:pointer;margin-left:5px;" onclick="searchAnime()"></i>
+        <input style="margin-left:20px;font-size:25px" id="search-query" placeholder="Anime name..." class="text-black">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--contrast);font-size:40px;cursor:pointer;margin-left:5px;" onclick="searchAnime()"></i>
+        <i class="fa-solid fa-circle-plus" style="color:var(--contrast);font-size: 40px;cursor:pointer;margin-left:20px;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setModal('add')"></i>
+        <i class="fa-solid fa-pen-to-square" style="color:var(--contrast);font-size: 40px;cursor:pointer;margin-left:20px;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setModal('edit')"></i>
         <hr style="background-color:white">
         <div class="list-content">
         </div>
@@ -162,7 +162,7 @@ if (localStorage.getItem("nktoken")) {
                 <img src="${element.src}" alt="${element.name} image" referrerpolicy="no-referrer" style="width:131px;height:176px;">
             </div>
             <div class="anime-info-container">
-                <div class="anime-info-name">${element.name}</div>
+                <div class="anime-info-name"><a href="http://watch.koneko.link/?q=${element.name}">${element.name}</a></div>
                 <br>
                 <div class="anime-info-state">Anime state: <div class="badge">${element.state}</div></div><br>
                 <div class="anime-info-episode">Current episode: <div class="badge">${element.currentEpisode}</div></div><br>
