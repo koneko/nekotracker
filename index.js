@@ -10,6 +10,12 @@ const port = process.env.PORT || 3000
 const dbUrl = process.env.DBURL || "mongodb://127.0.0.1/anime-tracker"
 const mail = require("./mail.json")
 const log = utils.log
+if (!mail) {
+    let mail = { fake: "fake" }
+    mail.username = process.env.username
+    mail.password = process.env.password
+    mail.owner = process.env.owner
+}
 app.use(express.static("public"))
 
 const temporaryMail = require("./models/tempMail.js")
