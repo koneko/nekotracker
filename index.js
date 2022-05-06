@@ -85,12 +85,19 @@ app.get("/api/edit", async (req, res) => {
 app.get("/api/add", async (req, res) => {
     let tokens = req.query.token
     let name = req.query.name
-    let state = req.query.state
     let src = req.query.src
     let episodes = req.query.episodes
+    let id = utils.generateId()
     let user = await User.findOne({ token: tokens })
     if (!user) return res.send("very bad... smh")
-    user.list.push({ name, state, src, episodes })
+    let pushObject = {
+        id: id,
+        name,
+        state: "watching",
+        src,
+        currentEpisode: episodes
+    }
+    user.list.push(pushObject)
     await user.save()
     res.send("ok")
 })
