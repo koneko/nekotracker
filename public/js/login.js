@@ -26,10 +26,17 @@ socket.on("loginResponse", (object) => {
         <button onclick="sendCode('${returnmail}')">Send</button>
         `
 })
+
+//read the url and get the params from it (params isthe callback url, and upon logging in, redirect to this url with ?token=<token>)
+let url = new URL(window.location.href)
+let params = url.searchParams
+let token = params.get("callback")
+console.log(token)
 socket.on("codeResponse", (object) => {
     console.log("Code response recieved.")
     if (object.error) return alert(object.error)
     localStorage.setItem("nktoken", object.token)
     localStorage.setItem("nkmail", object.mail)
-    location.href = "/"
+    if (token) window.location.href = token + "?token=" + object.token
+    else location.href = "/"
 })
