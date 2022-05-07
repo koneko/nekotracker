@@ -15,7 +15,8 @@ mail.username = "no.reply.koneko"
 mail.password = process.env.password
 mail.owner = process.env.owner
 app.use(express.static("public"))
-
+const cors = require("cors")
+app.use(cors())
 const temporaryMail = require("./models/tempMail.js")
 const User = require("./models/User.js");
 
