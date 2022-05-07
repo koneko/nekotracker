@@ -49,7 +49,7 @@ app.get("/list/remove/:id", (req, res) => {
     res.send(`
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-    const socket = io.connect("http://localhost:3000")
+    const socket = io.connect()
     let token = localStorage.getItem("nktoken")
     let mail = localStorage.getItem("nkmail")
     socket.emit("removeFromList", { mail: mail, token: token, id: "${id}" })
