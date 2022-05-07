@@ -46,7 +46,7 @@ socket.on("checkIsLoggedInResponse", (error) => {
             </select>
             <input id="editAnimeEpisode" placeholder="Current Episode" value="${item.currentEpisode}" style="width:30px;">
             <button onclick="editAnime()">Confirm</button>
-            <a href="/list/remove/${item.id}" onclick="closeModal()">delete</a>
+            <a onclick="deleteItem('${item.id}')" href='javascript:void(0)'>delete</a>
             `
         })
     }
@@ -55,4 +55,8 @@ socket.on("checkIsLoggedInResponse", (error) => {
 function closeModal () {
     parent.document.getElementById("modal-close-btn").click()
     parent.location.reload()
+}
+
+function deleteItem (id) {
+    parent.window.location.href = "/list/remove/" + id
 }
