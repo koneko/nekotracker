@@ -54,7 +54,7 @@ app.get("/list/remove/:id", (req, res) => {
     let mail = localStorage.getItem("nkmail")
     socket.emit("removeFromList", { mail: mail, token: token, id: "${id}" })
     socket.on("removeFromListResponse", (object) => {
-        if(object.error) alert(object.error)
+        if(object.error) return alert(object.error)
         location.href = "../../"
     })
     </script>
@@ -99,6 +99,12 @@ app.get("/api/add", async (req, res) => {
         currentEpisode: episodes
     }
     user.list.push(pushObject)
+    //sort the list from A-Z
+    user.list.sort((a, b) => {
+        if (a.name < b.name) return -1
+        if (a.name > b.name) return 1
+        return 0
+    })
     await user.save()
     res.send("ok")
 })
