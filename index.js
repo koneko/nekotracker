@@ -76,8 +76,21 @@ app.get("/api/edit", async (req, res) => {
     if (!user) return res.send("very bad... smh")
     let item = user.list.find(item => item.id == ids)
     if (!item) return res.send("very bad... smh")
-    // name, state, src, 
     var newItem = { ...item, currentEpisode: episodes };
+    user.list.splice(user.list.indexOf(item), 1, newItem);
+    await user.save()
+    res.send("ok")
+})
+
+app.get("/api/editStatus", async (req, res) => {
+    let tokens = req.query.token
+    let ids = req.query.id
+    let state = req.query.state
+    let user = await User.findOne({ token: tokens })
+    if (!user) return res.send("very bad... smh")
+    let item = user.list.find(item => item.id == ids)
+    if (!item) return res.send("very bad... smh")
+    var newItem = { ...item, state: state };
     user.list.splice(user.list.indexOf(item), 1, newItem);
     await user.save()
     res.send("ok")
